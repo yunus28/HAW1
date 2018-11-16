@@ -1,0 +1,10 @@
+
+.git/
+
+**/doc
+
+*.class
+*.ctxt
+*.pkh
+*.bluej
+*.DS_Store
