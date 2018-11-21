@@ -25,20 +25,38 @@ class Dompteur
         if (astlaenge >= 30)
         {
             Turtle turtle = new Turtle(x, y);
-            turtle.drehe(90/aeste + 180);
-            double winkel = 180 / aeste; //30 90 150 bei 3 asten
-            for (int i = 1; i<=aeste; i++)
-            {
+            turtle.drehe(90d/aeste + 180);
+            double winkel = 180d / aeste; //30 90 150 bei 3 asten
+            turtle.setzeFarbe((int)astlaenge/5);
+            // for (int i = 1; i<=aeste; i++)
+            // {
                 
-                turtle.geheVor(astlaenge);
+                // turtle.geheVor(astlaenge);
                 
-                x = turtle.gibX();
-                y = turtle.gibY();
-                zeichneBaum(aeste, astlaenge*0.5, x, y);
+                // x = turtle.gibX();
+                // y = turtle.gibY();
+                // zeichneBaum(aeste, astlaenge-10, x, y);
                 
-                turtle.geheVor(-astlaenge);
-                turtle.drehe(winkel);
-            }
+                // turtle.geheVor(-astlaenge);
+                // turtle.drehe(winkel);
+            // }
+            hilfe(1, aeste, turtle, astlaenge, winkel);
+        }
+        
+    }
+    private void hilfe(int i, int aeste, Turtle turtle, double astlaenge, double winkel)
+    {
+        if(i<=aeste)
+        {
+            turtle.geheVor(astlaenge);
+            double x = turtle.gibX();
+            double y = turtle.gibY();
+            zeichneBaum(aeste, astlaenge-10, x, y);
+                            
+            turtle.geheVor(-astlaenge);
+            turtle.drehe(winkel);
+            
+            hilfe(++i, aeste, turtle, astlaenge, winkel);
         }
     }
     
