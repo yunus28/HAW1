@@ -20,7 +20,7 @@ class TicTacToe
      */
     public TicTacToe()
     {
-        _spielfeld = new SpielfeldInteger();
+        _spielfeld = new SpielfeldGeflechtEnum();
         _aktuellerSpieler = 1;
         _gewinner = -1;
     }
