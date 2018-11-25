@@ -13,7 +13,7 @@ class SpielfeldString implements Spielfeld
      */
     public SpielfeldString ()
     {
-        _feld = "000000000"; //9 0en
+        _feld = "000000000"; //9 0en, 1->spieler1 2->spieler2
         //xyz000000 x=erste Zeile & spalte, y 2.spalte
         //000xyz000 x=zweite Zeile & spalte, y 2.spalte
         //000000xyz x= dritte zeile & spalte, y 2.spalte
@@ -58,10 +58,7 @@ class SpielfeldString implements Spielfeld
         {
             int index = berechneIndex(zeile, spalte);
             char c = _feld.charAt(index);
-            if (c=='0') //feld unbesetzt?
-            {
-                besetzePosition(spieler, index);
-            }
+            besetzePosition(spieler, index);
         }
     }
     private int berechneIndex (int zeile, int spalte)
@@ -79,6 +76,6 @@ class SpielfeldString implements Spielfeld
      */
     public boolean istVoll()
     {
-        return false;
+        return (!_feld.contains("0"));
     }
 }
