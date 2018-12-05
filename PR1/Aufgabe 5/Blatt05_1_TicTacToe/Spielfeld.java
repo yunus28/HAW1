@@ -19,7 +19,7 @@ interface Spielfeld
      *            horizontale Position (0-2)
      * @return 0 (unbesetzt), 1 (Spieler 1), 2 (Spieler 2)
      */
-    public int gibBesitzer(int zeile, int spalte);
+    int gibBesitzer(int zeile, int spalte);
     
     /**
      * Besetzt die angegebene Position auf dem Spielfeld fuer einen Spieler.

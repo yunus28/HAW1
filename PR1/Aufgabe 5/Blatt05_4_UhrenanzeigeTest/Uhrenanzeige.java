@@ -47,7 +47,7 @@ class Uhrenanzeige
     public void taktSignalGeben()
     {
         _minuten.erhoehen();
-        if (_minuten.gibWert() == 1)
+        if (_minuten.gibWert() == 0)
         {
             _stunden.erhoehen();
         }

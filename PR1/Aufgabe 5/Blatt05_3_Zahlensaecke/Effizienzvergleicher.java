@@ -50,11 +50,11 @@ class Effizienzvergleicher
         long diff = stop1-start;
         // Bilde die Differenz aus Stoppzeit und Startzeit
         
-        diff = diff / 1_000_000;
+        double diffd = diff / 1_000_000;
         // Teile die Differenz durch 1_000_000, um von ns nach ms umzurechnen
 
         System.out.print(sack); // Beschreibung des Zahlensacks ausgeben
-        System.out.println(": " + diff + "ms"); // gefolgt von einem Doppelpunkt
+        System.out.println(": " + diffd + "ms"); // gefolgt von einem Doppelpunkt
         // Gib das Ergebnis auf der Konsole aus
         
     }

@@ -26,7 +26,7 @@ class SpielfeldInteger implements Spielfeld
     public int gibBesitzer(int zeile, int spalte)
     {
         int index = berechneIndex(zeile, spalte);
-        return (_feld>>index) & 0b11;
+        return (_feld>>index) & 0b11; //schiebt wichtige bits auf pos 0,1 und löscht alle anderen mit AND
     }
     
     /**
@@ -42,25 +42,12 @@ class SpielfeldInteger implements Spielfeld
     public void besetzePosition(int zeile, int spalte, int spieler)
     {
         int index = berechneIndex(zeile, spalte);
-        if (gibBesitzer(zeile, spalte)!=0)
+        if (gibBesitzer(zeile, spalte)!=0) //löscht ehemaligen wert
         {
             int maskXOR = gibBesitzer(zeile, spalte)<<index;
             _feld = _feld ^ maskXOR;
         }
         int mask = spieler<<index;
-        // if (spieler==0)
-        // {
-            // int hintereMask= Math.pow(2, index)-1;
-            // int vorderemask = _feld>>(index+2)
-        // }
-        // if (spieler==1)
-        // {
-            // mask = 0b01<<index;
-        // } else if (spieler==2)
-        // {
-            // mask = 0b10<<index;
-        // }
-        //_feld = _feld & (0b00<<index);
         _feld = _feld | mask;
     }
     
@@ -76,7 +63,7 @@ class SpielfeldInteger implements Spielfeld
     {
         for (int i = 0; i<=16; i+=2)
         {
-            if (((_feld>>i) & 0b11) == 0)
+            if (((_feld>>i) & 0b11) == 0) //feld um 2 bits kuerzen, mit AND nur diese mit 0 vergleichen
             {
                 return false;
             }
