@@ -16,6 +16,10 @@ public class TagTest
     @Test
     public void testGleichheit()
     {
+        Tag t1 = new Tag(20);
+        Tag t2 = new Tag(20);
+        assertEquals(t1,t2);
+        assertEquals(t1.hashCode(),t2.hashCode());
     }
     
     /**
@@ -25,5 +29,8 @@ public class TagTest
     @Test
     public void testUngleichheit()
     {
+        Tag t1 = new Tag(21);
+        Tag t2 = new Tag(20);
+        assertNotEquals(t1,t2);
     }
 }
