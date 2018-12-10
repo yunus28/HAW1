@@ -19,7 +19,7 @@ public class SpielfeldTest
      */
     public SpielfeldTest()
     {
-        _spielfeld = new SpielfeldInteger();
+        _spielfeld = new SpielfeldGeflechtEnum();
     }
 
     /**
