@@ -6,14 +6,7 @@
  */
 class SpielfeldString implements Spielfeld
 {
-    private String _feld;
-    
-    /**
-     * Erstellt ein leeres Spielfeld
-     */
-    public SpielfeldString ()
-    {
-        _feld = "000000000"; //9 0en, 1->spieler1 2->spieler2
+    private String _feld;//9 0en, 1->spieler1 2->spieler2
         //xyz000000 x=erste Zeile & spalte, y 2.spalte
         //000xyz000 x=zweite Zeile & spalte, y 2.spalte
         //000000xyz x= dritte zeile & spalte, y 2.spalte
@@ -21,6 +14,13 @@ class SpielfeldString implements Spielfeld
         // 0 0 1 2
         // 1 3 4 5
         // 2 6 7 8
+    
+    /**
+     * Erstellt ein leeres Spielfeld
+     */
+    public SpielfeldString ()
+    {
+        _feld = "000000000"; 
         
     }
     
@@ -38,7 +38,7 @@ class SpielfeldString implements Spielfeld
         int index = berechneIndex(zeile, spalte);
         char c = _feld.charAt(index);
         
-        int a = Integer.parseInt(String.valueOf(c));
+        int a = c - '0';
         return a;
     }
     /**
@@ -59,6 +59,10 @@ class SpielfeldString implements Spielfeld
             int index = berechneIndex(zeile, spalte);
             char c = _feld.charAt(index);
             besetzePosition(spieler, index);
+        }
+        else 
+        {
+            throw new IllegalArgumentException ("Das geht so nicht..");
         }
     }
     private int berechneIndex (int zeile, int spalte)

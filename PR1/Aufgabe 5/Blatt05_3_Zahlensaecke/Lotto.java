@@ -28,7 +28,7 @@ public class Lotto
         sack.leereSack();
         for (int i = 1; i<=6; i++)
         {
-            System.out.println( sack.entferneZahl() );
+            System.out.println( sack.entferneZahl() +1);
         }
     }
 }

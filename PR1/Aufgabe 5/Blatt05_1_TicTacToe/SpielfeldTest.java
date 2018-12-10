@@ -19,7 +19,7 @@ public class SpielfeldTest
      */
     public SpielfeldTest()
     {
-        _spielfeld = new SpielfeldGeflechtEnum();
+        _spielfeld = new SpielfeldString();
     }
 
     /**
@@ -74,12 +74,13 @@ public class SpielfeldTest
     }
 
     /**
-     * Schreibt in diesen Kommentar, was diese Methode testet:
-     * 
+     * Beschhreibt jedes Feld einmal mit Spieler1 dann mit Spieler2 
+     * und dann mit Spieler0.
+     * Auﬂerdem wird jedes mal kontrolliert ob der richtige Spieler gesetzt..
      * 
      */
     @Test
-    public void test3()
+    public void testAlleBeUndUeberschreiben()
     {
         for (int zeile = 0; zeile < 3; ++zeile)
         {
