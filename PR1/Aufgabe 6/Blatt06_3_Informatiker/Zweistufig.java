@@ -1,5 +1,5 @@
 import static java.util.Objects.requireNonNull;
-
+import java.util.Comparator;
 /**
  * Vergleicht zwei Personen anhand eines primaeren Vergleichers.
  * Wenn die beiden Personen laut diesem primaeren Vergleicher gleich sind,
@@ -8,16 +8,16 @@ import static java.util.Objects.requireNonNull;
  * @author Fredrik Winkler
  * @version 2018
  */
-class Zweistufig implements Vergleicher
+class Zweistufig implements Comparator<Person>
 {
-    private final Vergleicher _primaer;
-    private final Vergleicher _sekundaer;
+    private final Comparator _primaer;
+    private final Comparator _sekundaer;
     
     /**
      * @param primaer der primaere Vergleicher
      * @param sekundaer der sekundaere Vergleicher
      */
-    public Zweistufig(Vergleicher primaer, Vergleicher sekundaer)
+    public Zweistufig(Comparator primaer, Comparator sekundaer)
     {
         _primaer = requireNonNull(primaer);
         _sekundaer = requireNonNull(sekundaer);
@@ -26,12 +26,12 @@ class Zweistufig implements Vergleicher
     /**
      * @see Vergleicher.vergleiche
      */
-    public int vergleiche(Person a, Person b)
+    public int compare(Person a, Person b)
     {
-        int ergebnis = _primaer.vergleiche(a, b);
+        int ergebnis = _primaer.compare(a, b);
         if (ergebnis == 0)
         {
-            ergebnis = _sekundaer.vergleiche(a, b);
+            ergebnis = _sekundaer.compare(a, b);
         }
         return ergebnis;
     }

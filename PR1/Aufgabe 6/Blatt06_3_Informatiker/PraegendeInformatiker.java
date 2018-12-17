@@ -1,3 +1,4 @@
+import java.util.Comparator;
 /**
  * Eine Zusammenstellung von Informatikern, die die Informatik entscheidend gepraegt haben.
  * 
@@ -60,6 +61,18 @@ class PraegendeInformatiker
         }
         System.out.println();
     }
+    
+    public void schreibeGeordnet(Comparator vergleicher)
+    {
+        _informatiker = _urspruenglicheReihenfolge.clone();
+        insertionsort(vergleicher);
+        System.out.println("========== " + vergleicher.getClass().toString().substring(6) + " ==========");
+        for (Person p : _informatiker)
+        {
+            System.out.println(p);
+        }
+        System.out.println();
+    }
 
     /**
      * Insertionsort ist ein einfacher, aber nicht besonders effizienter Sortieralgorithmus.
@@ -76,11 +89,38 @@ class PraegendeInformatiker
             // Nachbedingung: Die Liste ist von 0 bis i sortiert
         }
     }
+    
+    /**
+     * Insertionsort ist ein einfacher, aber nicht besonders effizienter Sortieralgorithmus.
+     * Bitte verwendet in der Praxis Collections.sort, statt eigene Sortierroutinen zu schreiben!
+     * Aber vielleicht interessiert ja den einen oder anderen Studierenden,
+     * wie man ein Sortierverfahren von Hand programmieren koennte :)
+     */
+    private void insertionsort(Comparator vergleicher)
+    {
+        for (int i = 1; i < _informatiker.length; ++i)
+        {
+            // Vorbedingung: Die Liste ist von 0 bis i-1 sortiert
+            insert(i, vergleicher);
+            // Nachbedingung: Die Liste ist von 0 bis i sortiert
+        }
+    }
 
     private void insert(int j, Vergleicher vergleicher)
     {
         Person einzufuegen = _informatiker[j];
         while ((j > 0) && vergleicher.vergleiche(einzufuegen, _informatiker[j - 1]) < 0)
+        {
+            _informatiker[j] = _informatiker[j - 1];
+            --j;
+        }
+        _informatiker[j] = einzufuegen;
+    }
+    
+    private void insert(int j, Comparator vergleicher)
+    {
+        Person einzufuegen = _informatiker[j];
+        while ((j > 0) && vergleicher.compare(einzufuegen, _informatiker[j - 1]) < 0)
         {
             _informatiker[j] = _informatiker[j - 1];
             --j;

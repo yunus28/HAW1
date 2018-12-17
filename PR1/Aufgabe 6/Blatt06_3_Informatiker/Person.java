@@ -30,7 +30,7 @@ class Person
         _geburtsjahr = geburtsjahr;
         _maennlich = maennlich;
     }
-
+    
     /**
      * Liefert den Vornamen dieser Person.
      */
