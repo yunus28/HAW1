@@ -1,8 +1,13 @@
 import spielkarten.Skatspiel;
+import spielkarten.Kartenrang;
 import spielkarten.Kartenfarbe;
 import spielkarten.Spielkarte;
 import static spielkarten.Kartenrang.*;
 import static spielkarten.Kartenfarbe.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.HashSet;
+
 
 /**
  * Eine Mau-Mau-Runde besteht aus drei Spielern und einem Skatspiel (32 Karten).
@@ -23,6 +28,7 @@ class MauMauRunde
     private Spieler _spieler2;
     private Spieler _spieler3;
     private Skatspiel _kartensatz;
+    private Map<Kartenrang, Integer> _punkteMap; 
 
     /**
      * Eine Mau-Mau-Runde besteht aus einem Skatspiel 
@@ -32,9 +38,88 @@ class MauMauRunde
     public MauMauRunde()
     {
         _kartensatz = new Skatspiel();
-        _spieler1 = new Spieler("Spieler1");
-        _spieler2 = new Spieler("Spieler2");
-        _spieler3 = new Spieler("Spieler3");
+        _punkteMap = erstellePunkteMap();
+        _spieler1 = new Spieler("Spieler1", _punkteMap);
+        _spieler2 = new Spieler("Spieler2", _punkteMap);
+        _spieler3 = new Spieler("Spieler3", _punkteMap);
+    }
+    
+    public Map<Kartenrang, Integer> gibRangZuPunkteMap()
+    {
+        return _punkteMap;
+    }
+  
+    
+    private HashMap<Kartenrang, Integer> erstellePunkteMap()
+    {
+        HashMap<Kartenrang, Integer> map = new HashMap<Kartenrang, Integer>();
+        map.put(SIEBEN, 3);
+        map.put(ACHT, 3);
+        map.put(NEUN, 3);
+        map.put(BUBE, 2);
+        map.put(DAME, 6);
+        map.put(KOENIG, 6);
+        map.put(ZEHN, 4);
+        map.put(AS, 11);
+        return map;
+    }
+    
+    public KartenTripel zieheDrilling()
+    {
+        Kartenstapel stapel = new Kartenstapel();
+        HashSet<Spielkarte> gezogeneKarten = new HashSet<Spielkarte>();
+        HashMap<Kartenrang, Integer> zaehler = new HashMap<Kartenrang, Integer>();
+        Kartenrang tripelRang = null;
+        
+        boolean keinDrilling = true;
+        while(keinDrilling)
+        {
+            // if(stapel.anzahlKarten() == 0) //mehr karten falls kein drilling exisitiert
+            // {
+                // stapel = new Kartenstapel();
+            // }
+            Spielkarte sk = stapel.obersteKarteZiehen();
+            gezogeneKarten.add(sk);
+            
+            if (zaehler.containsKey( sk.rang() ) )
+            {
+                zaehler.put(sk.rang(), zaehler.get(sk.rang()) + 1 );
+                if (zaehler.get(sk.rang()) == 3)
+                {
+                    keinDrilling = false;
+                    tripelRang = sk.rang();
+                }
+            } else
+            {
+                zaehler.put(sk.rang(), 1);
+            }
+        }
+        return gib3Ranggleiche(gezogeneKarten, tripelRang);
+    }
+    
+    private KartenTripel gib3Ranggleiche(HashSet<Spielkarte> karten, Kartenrang tripelRang)
+    {
+        Spielkarte k1 = null;
+        Spielkarte k2 = null;
+        Spielkarte k3 = null;
+        for (Spielkarte sk: karten)
+        {
+            if(sk.rang() == tripelRang)
+            {
+                if(k1 == null)
+                {
+                    k1 = sk;
+                } else if(k2 == null)
+                {
+                    k2 = sk;
+                } else if(k3 == null)
+                {
+                    k3 = sk;
+                    return new KartenTripel(k1,k2,k3);
+                }                
+            } 
+        }
+        return null;
     }
 
     public KartenTripel zieheDreiBilder()
@@ -93,7 +178,31 @@ class MauMauRunde
             obersteKarte = eineRundeSpielen(ansicht, obersteKarte,kartenstapel);
         }
         Spieler gewinner = gewinnerErmitteln();
-        kartenEinsammeln();
+        Spieler verlierer = verliererErmitteln();
+        System.out.println("Der Gewinner ist " + gewinner + 
+            "\t Der Verlierer ist " + verlierer);
+    }
+    
+    private Spieler verliererErmitteln()
+    {
+        int punkte = 0;
+        Spieler verlierer = null;
+        if (_spieler1.zaehlePunkte() > punkte)
+        {
+            punkte = _spieler1.zaehlePunkte();
+            verlierer = _spieler1;
+        }
+        if (_spieler2.zaehlePunkte() > punkte)
+        {
+            punkte = _spieler2.zaehlePunkte();
+            verlierer = _spieler2;
+        }
+        if (_spieler3.zaehlePunkte() > punkte)
+        {
+            punkte = _spieler3.zaehlePunkte();
+            verlierer = _spieler3;
+        }
+        return verlierer;
     }
 
     /**

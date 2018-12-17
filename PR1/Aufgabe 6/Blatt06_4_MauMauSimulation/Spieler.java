@@ -13,17 +13,44 @@ class Spieler
     private final String _name;
     private List<Spielkarte> _hand;
     private Kartenansicht _kartensicht;
+    private Map<Kartenrang, Integer> _punkteMap;
 
     /**
      * Initialisierung eines Spielers: Anfangs hat
      * er keine Karte.
      * @param name der Name des Spielers
+     * @punkteMap darf nicht null sein
      */
-    public Spieler(String name)
+    public Spieler(String name, Map punkteMap)
     {
         _name = name;
         _hand = new LinkedList<Spielkarte>();
         _kartensicht = new Kartenansicht("Karten von " + _name);
+        _punkteMap = punkteMap;
+    }
+    
+    public int zaehlePunkte()
+    {
+        int punkte = 0;
+        for (Spielkarte sk: _hand)
+        {
+            punkte += _punkteMap.get( sk.rang() );
+        }
+                
+        return punkte;
+    }
+    
+    public int zaehleBuben() 
+    {
+        int a = 0;
+        for (Spielkarte sk : _hand)
+        {
+            if (sk.rang()==Kartenrang.BUBE)
+            {
+                ++a;
+            }
+        }
+        return a;
     }
 
     /**
