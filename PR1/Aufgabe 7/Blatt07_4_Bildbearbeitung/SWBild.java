@@ -1,3 +1,4 @@
+import java.util.*;
 /**
  * SWBild ist eine Klasse, die Graustufenbilder repraesentiert und
  * manipuliert. Die Implementierung erfolgt durch ein einfaches
@@ -101,7 +102,30 @@ class SWBild
      */
     public void heller(int delta)
     {
-        // HIER FEHLT NOCH WAS
+        if (delta < 0)
+        {
+            delta = -delta;
+        }
+
+        /**
+         * Durch alle Bytes des Bildes gehen und jeden Wert dekrementieren
+         */
+        for (int y = 0; y < _hoehe; y++)
+        {
+            for (int x = 0; x < _breite; x++)
+            {
+                if ((_bilddaten[y][x] + delta) < 256) // Wert darf 0 nicht unterschreiten
+                {
+                    _bilddaten[y][x] = (short) (_bilddaten[y][x] + delta);
+                }
+                else
+                {
+                    _bilddaten[y][x] = 255;
+                }
+            }
+        }
+        // Neuzeichnen der Bildleinwand, basierend auf den Werten in _bilddaten:
+        zeichneBild();
     }
 
     /**
@@ -125,7 +149,16 @@ class SWBild
      */
     public void horizontalSpiegeln()
     {
-        // HIER FEHLT NOCH WAS
+        for (int y = 0; y < _hoehe/2; ++y)
+        {
+            for (int x = 0; x < _breite; x++)
+            {
+                short tmp = _bilddaten[y][x]; 
+                _bilddaten[y][x] = _bilddaten[_hoehe-1-y][x];
+                _bilddaten[_hoehe-1-y][x] = tmp;
+            }
+        }
+        zeichneBild();
     }
     
     /**
@@ -133,7 +166,41 @@ class SWBild
      */
     public void weichzeichnen()
     {
-        // HIER FEHLT NOCH WAS
+        short[][] weichesBild = new short[_hoehe][_breite];
+        for(int y = 0; y < _hoehe; ++y)
+        {
+            for(int x = 0; x < _breite ; ++x)
+            {
+                LinkedList<Short> nachbarpixel = new LinkedList<Short>();
+                for(int yi = -1; yi < 2; yi++)
+                {
+                    if (yi + y > 0 && yi+ y < _hoehe)
+                        {
+                            for(int xi = -1; xi < 2; xi++)
+                            {
+                                if (xi + x > 0 && xi+x < _breite)
+                                {
+                                    nachbarpixel.add(_bilddaten[yi+y][xi+x]);
+                                }
+                            }
+                        }
+                }
+                weichesBild[y][x] = mittelwert(nachbarpixel);
+            }
+        }
+        _bilddaten = weichesBild;
+        zeichneBild();
+    }
+            
+    private short mittelwert(List<Short> werte)
+    {
+        short ergebnis = 0;
+        for (short wert: werte)
+        {
+            ergebnis += wert;
+        }
+        ergebnis = (short) (ergebnis/werte.size());
+        return ergebnis;
     }
 
     /**
@@ -141,7 +208,17 @@ class SWBild
      */
     public void punktpiegeln()
     {
-        // HIER FEHLT NOCH WAS
+        horizontalSpiegeln();
+        for (int y = 0; y < _hoehe; ++y)
+        {
+            for (int x = 0; x < _breite/2; x++)
+            {
+                short tmp = _bilddaten[y][x]; 
+                _bilddaten[y][x] = _bilddaten[y][_breite-1-x];
+                _bilddaten[y][_breite-1-x] = tmp;
+            }
+        }
+        zeichneBild();
     }
 
     /**
@@ -160,7 +237,20 @@ class SWBild
      */
     public void spot(int x0, int y0, int r, short i)
     {
-        // HIER FEHLT NOCH WAS
+        for(int yi = y0- r/2; yi < y0 + r/2; yi++)
+        {
+            if (yi + y0 > 0 && yi+ y0 < _hoehe)
+                {
+                    for(int xi = x0 - r /2; xi < x0 + r/2; xi++)
+                    {
+                        if (xi + x0 > 0 && xi+x0 < _breite)
+                        {
+                            _bilddaten[yi+y0][xi+x0] += i ;
+                        }
+                    }
+                }
+        }
+        zeichneBild();
     }
 
     /**
