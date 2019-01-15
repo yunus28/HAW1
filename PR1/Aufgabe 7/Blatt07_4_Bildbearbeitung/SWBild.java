@@ -178,7 +178,7 @@ class SWBild
                         {
                             for(int xi = -1; xi < 2; xi++)
                             {
-                                if (xi + x > 0 && xi+x < _breite)
+                                if (xi + x > 0 && xi+x < _breite && !(xi==0 && yi==0))
                                 {
                                     nachbarpixel.add(_bilddaten[yi+y][xi+x]);
                                 }
