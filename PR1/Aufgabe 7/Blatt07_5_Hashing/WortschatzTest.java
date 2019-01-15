@@ -34,6 +34,8 @@ public class WortschatzTest
     @Test
     public void testHinzugefuegtesWortIstEnthalten()
     {
+        _schatz.fuegeWortHinzu("Hallo");
+        assertEquals(true ,_schatz.enthaeltWort("Hallo"));
     }
     
     /**
@@ -42,6 +44,9 @@ public class WortschatzTest
     @Test
     public void testEntferntesWortIstNichtEnthalten()
     {
+        _schatz.fuegeWortHinzu("Hallo");
+        _schatz.entferneWort("Hallo");
+        assertEquals(false ,_schatz.enthaeltWort("Hallo"));
     }
     
     /**
@@ -50,6 +55,8 @@ public class WortschatzTest
     @Test
     public void testNichtHinzugefuegtesWortIstNichtEnthalten()
     {
+        assertEquals(false ,_schatz.enthaeltWort("Hallo"));
+        assertEquals(false ,_schatz.enthaeltWort(""));
     }
     
     /**
@@ -58,6 +65,16 @@ public class WortschatzTest
     @Test
     public void testDuplikateWerdenNichtHinzugefuegt()
     {
+        _schatz.fuegeWortHinzu("Hallo");
+        assertEquals(1, _schatz.anzahlWoerter());
+        assertEquals(true ,_schatz.enthaeltWort("Hallo"));
+        
+        _schatz.fuegeWortHinzu("Hallo");
+        assertEquals(1, _schatz.anzahlWoerter());
+        
+        _schatz.entferneWort("Hallo");
+        assertEquals(false ,_schatz.enthaeltWort("Hallo"));
+        assertEquals(0, _schatz.anzahlWoerter());
     }
     
     /**
@@ -66,5 +83,8 @@ public class WortschatzTest
     @Test
     public void testEntfernenNichtEnthaltenerWoerterBewirktNichts()
     {
+        _schatz.fuegeWortHinzu("Hallo");
+        _schatz.entferneWort("awasdkjh");
+        assertEquals(true ,_schatz.enthaeltWort("Hallo"));
     }
 }

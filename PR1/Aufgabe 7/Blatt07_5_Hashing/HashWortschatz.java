@@ -10,6 +10,8 @@
 class HashWortschatz implements Wortschatz
 {
 
+    private WortListe[] _worte;
+    HashWertBerechner _berechner;
     /**
      * Initialisiert ein neues Exemplar von HashWortschatz.
      * 
@@ -18,6 +20,26 @@ class HashWortschatz implements Wortschatz
      */
     public HashWortschatz(HashWertBerechner berechner, int groesse)
     {
+        _worte = new WortListe[groesse];
+        initWortListe();
+        _berechner = berechner;
+    }
+    
+    private void initWortListe()
+    {
+        for (int i = 0; i < _worte.length; ++i)
+        {
+            _worte[i] = new WortListe();
+        }
+    }
+    
+    private int stringZuIndex(String wort)
+    {
+        if (_berechner.hashWert(wort) == Integer.MIN_VALUE)
+        { //sehr lustig, musste lange suchen...
+            return 666% (_worte.length);
+        }
+        return Math.abs(_berechner.hashWert(wort)) % (_worte.length);
     }
     
     /**
@@ -27,6 +49,8 @@ class HashWortschatz implements Wortschatz
      */
     public void fuegeWortHinzu(String wort)
     {
+        entferneWort(wort); // keine dupplikate
+        _worte[stringZuIndex(wort)].fuegeWortHinzu(wort);
     }
     
     /**
@@ -36,6 +60,7 @@ class HashWortschatz implements Wortschatz
      */
     public void entferneWort(String wort)
     {
+        _worte[stringZuIndex(wort)].entferneWort(wort);
     }
     
     /**
@@ -46,7 +71,7 @@ class HashWortschatz implements Wortschatz
      */
     public boolean enthaeltWort(String wort)
     {
-        return false;
+        return _worte[stringZuIndex(wort)].enthaeltWort(wort);
     }
     
     /**
@@ -56,7 +81,12 @@ class HashWortschatz implements Wortschatz
      */
     public int anzahlWoerter()
     {
-        return 0;
+        int woerter = 0;
+        for (WortListe liste : _worte)
+        {
+            woerter += liste.anzahlWoerter();
+        }
+        return woerter;
     }
 
     /**
@@ -64,6 +94,10 @@ class HashWortschatz implements Wortschatz
      */
     public void schreibeAufKonsole()
     {
+        for (WortListe liste : _worte)
+        {
+            System.out.println(liste);
+        }
     }
     
     /**
@@ -71,7 +105,7 @@ class HashWortschatz implements Wortschatz
      */
     public int fuellgrad()
     {
-        return 0;
+        return (int) (anzahlWoerter()*100.0 / _worte.length);
     }
     
     /**
@@ -79,6 +113,17 @@ class HashWortschatz implements Wortschatz
      */
     public int laengsteKette()
     {
-        return 0;
+        int woerter = 0;
+        WortListe laengsteKette = null;
+        for (WortListe liste : _worte)
+        {
+            if (woerter < liste.anzahlWoerter())
+            {
+                woerter = liste.anzahlWoerter();
+                laengsteKette = liste; // aufgabe sagt laengste kette 
+                //zuruckgeben, aber da typ int, nicht genutzte variable
+            }
+        }
+        return woerter;
     }
 }

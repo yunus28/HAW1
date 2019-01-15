@@ -1,3 +1,4 @@
+
 import java.util.List;
 
 /**
@@ -34,7 +35,12 @@ class Startup
         List<String> lang = Worteinleser.dateiAlsText("moby10b.txt");
         HashWertBerechner delegation = new Delegation();
         
+        vermesse(lang, delegation, MINI);
         vermesse(lang, delegation, KLEIN);
+        vermesse(lang, delegation, MITTEL);
+        vermesse(lang, delegation, GROSS);
+        vermesse(lang, new schlechteHash(), MITTEL);
+        
     }
 
     /**
