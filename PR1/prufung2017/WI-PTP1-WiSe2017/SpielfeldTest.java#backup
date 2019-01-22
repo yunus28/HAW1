@@ -1,0 +1,214 @@
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import java.lang.reflect.*;
+
+/**
+ * Eine Testklasse fuer Spielfeld-Klassen.
+ *
+ * @author Christian Spaeh, Fredrik Winkler, Axel Schmolitzky
+ * @version 2017
+ */
+public class SpielfeldTest
+{
+    private ServiceMixTest.Util _util;
+
+    public SpielfeldTest()
+    {
+        _util = new ServiceMixTest.Util();
+    }
+
+    @Test (timeout = 1000)
+    public void testKlasseVorhandenUndImplementiertInterface()
+    {
+        _util.testeKlasseUndInterface("SpielfeldGeflecht","Spielfeld"); 
+    }
+
+    @Test (timeout = 1000)
+    public void testEnumVorhanden()
+    {
+        Class enumSpieler = _util.gibClass("Spieler");
+        Spieler[] valuesSpieler = (Spieler[])enumSpieler.getEnumConstants();
+        assertEquals("Enum Spieler nicht verwendbar",3,valuesSpieler.length);
+    }
+
+    @Test (timeout = 1000)
+    public void testEnumWirdVerwendet()
+    {
+        _util.testTypIstParameterVonMethodeInKlasse("Spieler", "besetze", "SpielfeldZeile");
+    }
+
+    @Test (timeout = 1000)
+    public void testKlasseVerwendetMap()
+    {
+        _util.testeKlasseHatZustand(_util.gibClass("SpielfeldGeflecht"));
+        _util.testKlasseVerwendetImplAlsFeld("SpielfeldGeflecht","java.util.HashMap");
+    }
+
+    @Test (timeout = 1000)
+    public void testKlasseHatFeldNachQTK()
+    {
+        _util.testeAlleFelderPrivate(_util.gibClass("SpielfeldGeflecht"));
+        _util.testEinFeldInKlasseHatTyp("SpielfeldGeflecht","java.util.Map");
+    }
+
+    @Test (timeout = 1000)
+    public void testNegativGibBesitzer()
+    {
+        {
+            Spielfeld sf = gibSpielfeld();
+            try 
+            {
+                sf.gibBesitzer(0,3);
+                fail("Fehlerhafte Parameter sollen zu einer IllegalArgumentException führen");
+            }
+            catch(IllegalArgumentException iae)
+            {
+            }
+        }
+        {
+            Spielfeld sf = gibSpielfeld();
+            try 
+            {
+                sf.gibBesitzer(3,0);
+                fail("Fehlerhafte Parameter sollen zu einer IllegalArgumentException führen");
+            }
+            catch(IllegalArgumentException iae)
+            {
+            }
+        }
+    }
+
+    @Test (timeout = 1000)
+    public void testNegativBesetzePosition()
+    {
+        {
+            Spielfeld sf = gibSpielfeld();
+            try 
+            {
+                sf.besetzePosition(0, 0, 3);
+                fail("Fehlerhafte Parameter sollen zu einer IllegalArgumentException führen");
+            }
+            catch(IllegalArgumentException iae)
+            {
+            }
+        }
+        {
+            Spielfeld sf = gibSpielfeld();
+            try 
+            {
+                sf.besetzePosition(0, 3, 0);
+                fail("Fehlerhafte Parameter sollen zu einer IllegalArgumentException führen");
+            }
+            catch(IllegalArgumentException iae)
+            {
+            }
+        }
+        {
+            Spielfeld sf = gibSpielfeld();
+            try 
+            {
+                sf.besetzePosition(3, 0, 0);
+                fail("Fehlerhafte Parameter sollen zu einer IllegalArgumentException führen");
+            }
+            catch(IllegalArgumentException iae)
+            {
+            }
+        }
+    }
+
+    private Spielfeld gibSpielfeld()
+    {
+        ServiceMixTest.Util util = new ServiceMixTest.Util();
+        Spielfeld sf = (Spielfeld)util.erzeugeExemplarParameterlos("SpielfeldGeflecht");
+        return sf;
+    }
+
+    @Test
+    public void testBlackboxSpielfeldFunktioniert()
+    {
+        testBefuelleSpielfeldKomplett();
+        testBefuelleSpielfeldKomplettRueckwaerts();
+        testeBelegbarkeitAllerZellen();
+        testBesetzeNeunMalDieselbePosition();
+    }
+
+    /**
+     * Wenn alle Positionen besetzt sind, solle das Spielfeld voll sein.
+     * Vorher sollte es immer eine freie Position geben.
+     */
+    public void testBefuelleSpielfeldKomplett()
+    {
+        Spielfeld spielfeld = gibSpielfeld();
+        for (int zeile = 0; zeile < 3; ++zeile)
+        {
+            for (int spalte = 0; spalte < 3; ++spalte)
+            {
+                assertFalse(spielfeld.istVoll());
+                spielfeld.besetzePosition(zeile, spalte, 1);
+            }
+        }
+        assertTrue(spielfeld.istVoll());
+    }
+
+    /**
+     * Wenn alle Positionen besetzt sind, solle das Spielfeld voll sein.
+     * Vorher sollte es immer eine freie Position geben. Dieser Test
+     * befuellt das Spielfeld von hinten nach vorne.
+     */
+    public void testBefuelleSpielfeldKomplettRueckwaerts()
+    {
+        Spielfeld spielfeld = gibSpielfeld();
+        for (int zeile = 2; zeile >= 0; --zeile)
+        {
+            for (int spalte = 2; spalte >= 0; --spalte)
+            {
+                assertFalse(spielfeld.istVoll());
+                spielfeld.besetzePosition(zeile, spalte, 1);
+            }
+        }
+        assertTrue(spielfeld.istVoll());
+    }
+
+    /**
+     * Wenn neun Mal dieselbe Position besetzt wird,
+     * sollte das Spielfeld nicht voll sein.
+     */
+    public void testBesetzeNeunMalDieselbePosition()
+    {
+        Spielfeld spielfeld = gibSpielfeld();
+
+        for (int i = 0; i < 9; ++i)
+        {
+            spielfeld.besetzePosition(0, 0, 1);
+        }
+        assertFalse(spielfeld.istVoll());
+    }
+
+    /**
+     * Teste, ob alle Zellen des Spielfeldes mit allen moeglichen
+     * Belegungen (0, 1 und 2) belegt werden koennen.
+     */
+    public void testeBelegbarkeitAllerZellen()
+    {
+        Spielfeld spielfeld = gibSpielfeld();
+
+        for (int zeile = 0; zeile < 3; ++zeile)
+        {
+            for (int spalte = 0; spalte < 3; ++spalte)
+            {
+                assertEquals(0, spielfeld.gibBesitzer(zeile, spalte));
+
+                spielfeld.besetzePosition(zeile, spalte, 1);
+                assertEquals(1, spielfeld.gibBesitzer(zeile, spalte));
+
+                spielfeld.besetzePosition(zeile, spalte, 2);
+                assertEquals(2, spielfeld.gibBesitzer(zeile, spalte));
+
+                spielfeld.besetzePosition(zeile, spalte, 0);
+                assertEquals(0, spielfeld.gibBesitzer(zeile, spalte));
+            }
+        }
+    }
+}
