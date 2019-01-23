@@ -139,14 +139,33 @@ public class GeldboerseImpl implements Geldboerse
         scheinarray[1] = Euroschein.E100;
         scheinarray[0] = Euroschein.E200;
         
-        System.out.println(_tasche + "<--vorm bezahlen"); 
+        HashMap<Euroschein, Integer>tasche2 = new HashMap<Euroschein, Integer>();
+        tasche2.put(Euroschein.E5, _tasche.get(Euroschein.E5));
+        tasche2.put(Euroschein.E10, _tasche.get(Euroschein.E10));
+        tasche2.put(Euroschein.E20, _tasche.get(Euroschein.E20));
+        tasche2.put(Euroschein.E50, _tasche.get(Euroschein.E50));
+        tasche2.put(Euroschein.E100, _tasche.get(Euroschein.E100));
+        tasche2.put(Euroschein.E200, _tasche.get(Euroschein.E200));
+        if(euroBetrag%50!=0)
+        {
+            int tmp = tasche2.get(Euroschein.E20);
+               for (int i = 1; i<=tmp ; ++i)
+               {
+                   if(Euroschein.E20.wert() <= euroBetrag && euroBetrag%50!=0)
+                   {
+                       System.out.println("diesen schein zahlen: " + Euroschein.E20.wert());
+                       euroBetrag = euroBetrag - Euroschein.E20.wert();
+                   }
+                }
+        }
+        
+        System.out.println(tasche2 + "<--vorm bezahlen"); 
         for(int a = 0; a< scheinarray.length; ++a)
         {
             Euroschein schein = scheinarray[a];
-            
             if(schein.wert() <= euroBetrag)
             {
-               int tmp = _tasche.get(schein);
+               int tmp = tasche2.get(schein);
                for (int i = 1; i<=tmp ; ++i)
                {
                    if(schein.wert() <= euroBetrag)
@@ -157,7 +176,7 @@ public class GeldboerseImpl implements Geldboerse
                 }
             }
         }
-        System.out.println("danach: -->" + _tasche);
+        System.out.println("danach: -->" + tasche2);
         return (euroBetrag == 0);
     }
 }
